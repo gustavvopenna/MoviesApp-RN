@@ -1,12 +1,17 @@
-import React, { useEffect } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import React from 'react';
+import { ActivityIndicator, Dimensions, Text, View } from 'react-native';
+import Carousel from 'react-native-snap-carousel';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import movieDB from '../api/movieDB';
+import { MoviePoster } from '../components/MoviePoster';
 import { useMovies } from '../hooks/useMovies';
-import { MovieDBNowPlaying } from '../interfaces/MovieInterface';
+import { globalStyles } from '../theme';
+
+const { width: windowWidth } = Dimensions.get('window')
 
 export const HomeScreen = () => {
   const { isLoading, nowPlayingMovies } = useMovies()
+  let { top } = useSafeAreaInsets()
 
   if(isLoading) {
     return (
@@ -17,14 +22,17 @@ export const HomeScreen = () => {
   }
   
   return (
-    <View style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Movies</Text>
+    <View style={{ marginTop: top + 20, height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+      <Text style={globalStyles.title}>Movies</Text>
       <View>
-        {
-          nowPlayingMovies.map(movie => (
-            <Text key={movie.id}>{movie.title}</Text>
-          ))
-        }
+        <Carousel
+          data={nowPlayingMovies}
+          sliderWidth={windowWidth}
+          itemWidth={300}
+          renderItem={({ item }) => (
+            <MoviePoster movie={item} />
+          )}
+        />
       </View>
     </View>
   )
