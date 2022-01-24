@@ -1,18 +1,18 @@
 import React from 'react';
-import { ActivityIndicator, Dimensions, Text, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Text, View, ScrollView } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MoviePoster } from '../components/MoviePoster';
+import { Slider } from '../components/Slider';
+
 import { useMovies } from '../hooks/useMovies';
 import { globalStyles } from '../theme';
-import { FlatList, ScrollView } from 'react-native-gesture-handler';
-import { Slider } from '../components/Slider';
 
 const { width: windowWidth } = Dimensions.get('window')
 
 export const HomeScreen = () => {
-  const { isLoading, nowPlayingMovies } = useMovies()
+  const { isLoading, nowPlaying, popular, topRated, upcoming } = useMovies()
   let { top } = useSafeAreaInsets()
 
   if(isLoading) {
@@ -30,7 +30,7 @@ export const HomeScreen = () => {
         <View>
           <View>
             <Carousel
-              data={nowPlayingMovies}
+              data={nowPlaying}
               sliderWidth={windowWidth}
               itemWidth={300}
               renderItem={({ item }) => (
@@ -39,7 +39,20 @@ export const HomeScreen = () => {
             />
           </View>
           <Slider
-            data={nowPlayingMovies}
+            title='Popular'
+            data={popular}
+            itemWidth={100}
+            itemHeight={160}
+          />
+          <Slider
+            title='Top rated'
+            data={topRated}
+            itemWidth={100}
+            itemHeight={160}
+          />
+          <Slider
+            title='Upcoming'
+            data={upcoming}
             itemWidth={100}
             itemHeight={160}
           />
