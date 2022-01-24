@@ -1,0 +1,2 @@
+export const DEFAULT_POSTER_WIDTH = 300
+export const DEFAULT_POSTER_HEIGHT = 420
