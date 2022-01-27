@@ -1,7 +1,11 @@
-import React, { FC } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React from 'react';
+import { Image, StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DEFAULT_POSTER_HEIGHT, DEFAULT_POSTER_WIDTH } from '../constants';
 import { Movie } from '../interfaces/MovieInterface';
+import { RootStackParams } from '../navigation/Navigation';
 
 interface Props {
   movie: Movie,
@@ -9,16 +13,18 @@ interface Props {
   height?: number
 }
 
-export const MoviePoster: FC<Props> = ({
+export const MoviePoster = ({
   movie,
   width = DEFAULT_POSTER_WIDTH,
   height = DEFAULT_POSTER_HEIGHT
-}) => {
+}: Props) => {
   const uri = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
-  console.log(uri)
+  const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
 
   return (
-    <View
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={() => navigation.navigate('DetailScreen', movie)}
       style={{
         ...styles.container,
         width,
@@ -29,7 +35,7 @@ export const MoviePoster: FC<Props> = ({
         source={{ uri }}
         style={styles.image}
         />
-    </View>
+    </TouchableOpacity>
   )
 };
 
