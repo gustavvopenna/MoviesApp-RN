@@ -3,6 +3,7 @@ import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../navigation/Navigation';
 import { globalStyles, pallete } from '../theme';
+import { useMovieDetails } from '../hooks/useMovieDetails';
 
 interface Props extends StackScreenProps<RootStackParams, 'DetailScreen'>{}
 
@@ -10,7 +11,7 @@ const { height: screenHeight } = Dimensions.get('screen')
 
 export const DetailScreen = ({ route }: Props) => {
   let movie = route.params
-  console.log({movie})
+  const { fullMovie, cast, isLoading } = useMovieDetails(movie.id)
   let uri = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
 
   return (
@@ -29,8 +30,8 @@ export const DetailScreen = ({ route }: Props) => {
             <Text style={{ marginLeft: 4 }}>{movie.vote_average}</Text>
           </View>
           {
-            movie.genre_ids.map(genre => (
-              <Text>{' '}{genre}{' '}</Text>
+            fullMovie?.genres?.map(genre => (
+              <Text key={genre.id} style={{ marginRight: 8 }}>{genre.name}</Text>
             ))
           }
         </View>
@@ -61,6 +62,7 @@ const styles = StyleSheet.create({
   },
   rating: {
     flexDirection: 'row',
+    marginRight: 8,
     padding: 4,
     borderRadius: 4,
     backgroundColor: pallete.lightGray
